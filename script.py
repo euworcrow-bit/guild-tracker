@@ -23,7 +23,7 @@ WebDriverWait(driver, 15).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, "table tbody tr"))
 )
 
-rows = driver.find_elements(By.CSS_SELECTOR, "table tbody tr")
+rows = driver.find_elements(By.XPATH, "//table//tr")
 
 data = []
 
