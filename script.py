@@ -1,35 +1,18 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import os
-import json
+import csv
 
-# ===== CONFIG =====
-SHEET_NAME = "Planilha Guild Vatoz Lokoz"
-
-# ===== GOOGLE AUTH =====
-creds_dict = json.loads(os.environ["GOOGLE_CREDENTIALS"])
-
-scope = [
-    "https://spreadsheets.google.com/feeds",
-    "https://www.googleapis.com/auth/drive"
-]
-
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-client = gspread.authorize(creds)
-
-sheet = client.open(SHEET_NAME).sheet1
-
-# ===== SELENIUM =====
 options = Options()
-options.add_argument("--headless")
+options.add_argument("--headless=new")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
-driver = webdriver.Chrome(options=options)
+service = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=options)
 
 driver.get("https://rubinot.com.br/guilds/Vatoz%20Lokoz")
 
@@ -51,9 +34,9 @@ for row in rows:
 
 driver.quit()
 
-# ===== ENVIO =====
-sheet.clear()
-sheet.update("A1", [["Rank", "Points", "Name", "Level"]])
-sheet.update("A2", data)
+with open("dados.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(["Rank", "Points", "Name", "Level"])
+    writer.writerows(data)
 
-print("Atualizado com sucesso!")
+print("CSV atualizado!")
