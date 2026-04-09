@@ -24,6 +24,7 @@ WebDriverWait(driver, 15).until(
 )
 
 rows = driver.find_elements(By.XPATH, "//table//tr")
+print(f"Linhas encontradas: {len(rows)}")
 
 data = []
 
