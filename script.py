@@ -16,7 +16,12 @@ driver = webdriver.Chrome(service=service, options=options)
 
 driver.get("https://rubinot.com.br/guilds/Vatoz%20Lokoz")
 
-time.sleep(5)
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+WebDriverWait(driver, 15).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, "table tbody tr"))
+)
 
 rows = driver.find_elements(By.CSS_SELECTOR, "table tbody tr")
 
